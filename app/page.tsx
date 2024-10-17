@@ -11,11 +11,23 @@ import {
 } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import React from "react";
+import { Mail } from "lucide-react";
 
 import cardData from "./data/card";
+import { supabaseBrowser } from "@/lib/supabase/browser";
 
 export default function Home() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+  const handleLoginWithGithub = () => {
+    const supabase = supabaseBrowser();
+    supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: location.origin + "/auth/callback",
+      },
+    });
+  };
 
   return (
     <div>
@@ -35,13 +47,13 @@ export default function Home() {
           <Button variant="destructive">Destructive</Button>
           <Button variant="outline">Outline</Button>
           <Button variant="ghost">Ghost</Button>
+          <Button onClick={handleLoginWithGithub} style={{ backgroundColor: 'gray', color: 'white' }}>
+            <Mail className="mr-2 h-4 w-4" /> Login with Github
+          </Button>
         </div>
-        <div className="md:col-span-2 grid grid-cols-1 md:gr-cols-2 lg:grid-cols-3 gap-2 p-2">
+        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
           {cardData.map(
-            (
-              { cardTitle, cardDescription, cardContent, cardFooter },
-              index
-            ) => (
+            ({ cardTitle, cardDescription, cardContent, cardFooter }, index) => (
               <Card key={index} className="w-70 h-60">
                 <CardHeader>
                   <CardTitle>{cardTitle}</CardTitle>
